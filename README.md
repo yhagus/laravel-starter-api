@@ -67,3 +67,65 @@ You should see 100% test coverage and all quality checks passing.
 
 ### Maintenance
 - `composer update:requirements` - Updates all PHP and NPM dependencies to latest versions
+
+
+
+## Available Modules
+
+### PHP 8.4
+
+Requires PHP 8.4 or newer — the language runtime used to run the application. This starter kit relies on modern PHP language features (strict typing, readonly properties, and improved union types) to provide safer and clearer code. Ensure your development and production environments use PHP 8.4+; check with `php -v` and, if needed, pin the platform PHP version in Composer via `composer config platform.php 8.4` for consistent dependency resolution.
+
+### Laravel Framework (>= 12.33.0)
+
+The Laravel core (v12.33.0+) supplies routing, the Eloquent ORM, queues, events, and the HTTP layer that power the application. This template follows common Laravel patterns — controllers, service providers, jobs, and middleware — so most Laravel knowledge transfers directly. Use `php artisan` for maintenance, migrations, and running queued workers.
+
+### Server: Octane (v2.12.3)
+
+Octane provides an optional high-performance server runtime (backed by Swoole or RoadRunner) that keeps the framework in memory between requests to dramatically increase throughput and reduce latency. Octane can yield significant performance benefits but requires care with global state and service lifecycles; follow the Octane documentation when enabling it in production and ensure your code is 'Octane-safe' (reset request-specific state between requests).
+
+### Authentication: Passport (v13.2.1)
+
+Laravel Passport implements OAuth2 for API authentication, offering token issuance (personal access tokens, password grant, and client credentials) and token revocation. Typical setup requires running `php artisan passport:install` to generate keys and clients, and configuring Passport guards and routes. Use Passport when you need a standards-compliant, first-party OAuth2 solution for your APIs.
+
+### S3 Driver (league/flysystem-aws-s3-v3 v3.29)
+
+Adds AWS S3 support to Laravel's filesystem using Flysystem, enabling remote storage for user uploads and media. Configure S3 by setting `FILESYSTEM_DISK=s3` and the AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `AWS_BUCKET`) in your `.env`. The media library can be configured to use S3 for persistent storage and CDN-friendly delivery.
+
+### Essentials (nunomaduro/essentials v1.0.1)
+
+A small collection of opinionated utilities and conventions that this starter kit uses to improve consistency and developer ergonomics. Examples include stricter model behavior, helpful macros, and other convenience features; consult the package docs to understand the conventions introduced by Essentials and how they affect your app.
+
+### Redis Client (predis/predis v3.2)
+
+The `predis` client provides Redis connectivity for caching, session storage, and queueing. To enable Redis-backed functionality, configure Redis connection settings in `.env` (`REDIS_HOST`, `REDIS_PORT`, etc.) and set `CACHE_DRIVER=redis` or `QUEUE_CONNECTION=redis` as appropriate. If your hosting uses a different Redis client, the code can be adapted accordingly.
+
+### Activity Log (spatie/laravel-activitylog v4.10.2)
+
+Spatie's Activity Log records model changes and user actions in a structured audit trail — useful for debugging, monitoring, and compliance. Typical usage includes adding traits to models and calling the `activity()` helper for custom log entries; migrations and config are publishable so you can tailor retention and storage.
+
+### Media Library (spatie/laravel-medialibrary v11.15)
+
+This package allows attaching files to Eloquent models, defining conversion pipelines (thumbnails, responsive images), and integrating with remote disks like S3. Common usage is `$model->addMedia($path)->toMediaCollection('images')`; conversions can be queued for background processing and storage configured via `config/filesystems.php`.
+
+### Permissions (spatie/laravel-permission v6.21)
+
+Spatie's Permissions package simplifies roles and permission management by providing model traits, middleware, and helper methods. Define roles and permissions, assign them to users, and protect routes with middleware like `role:admin` or check permissions with `$user->can('update articles')`. Publish the package migrations and seed an initial set of roles/permissions when setting up a new project.
+
+Why this matters
+
+- These modules are installed in production and provide runtime functionality. Developer-only tools (linters, test helpers, etc.) are listed under `require-dev` and are not needed in production.
+- For production deployments run `composer install --no-dev --optimize-autoloader` to skip dev dependencies and optimize autoloading.
+
+## Deployment
+
+Deployment instructions and a `Dockerfile` with recommended production-ready steps are coming soon. In the meantime, you can deploy this project using any standard PHP/Laravel hosting workflow. A minimal set of production tasks you will typically perform:
+
+- Install dependencies without dev packages: `composer install --no-dev --optimize-autoloader`
+- Set environment variables (`.env`) for database, Redis, S3, and Passport keys
+- Generate the application key: `php artisan key:generate`
+- Run database migrations: `php artisan migrate --force`
+- Configure your process manager (Supervisor, systemd) for queue workers and schedule tasks
+- If using Octane, follow the official Octane documentation to choose and configure Swoole or RoadRunner for production
+
+Full containerized deployment instructions (Dockerfile, Docker Compose, and recommended runtime configuration) will be added soon.
