@@ -4,15 +4,25 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api'])->group(function (): void {
 
-    Route::get('/authorize', fn (Request $request) => $request->user());
-    Route::post('/logout', function (Request $request) {
-        $request->user()->token()->revoke();
+    Route::get('/authorize', function (Request $request) {
+        $user = $request->user()->select(['id', 'email'])->first();
 
-        return response()->json(['message' => 'Logged out successfully']);
+        $key = sprintf('auth:user:%s', $user->getAuthIdentifier());
+        $ttlSeconds = 60;
+
+        if ($cached = Cache::get($key)) {
+            return response()->json($cached);
+        }
+
+        $payload = $user->toArray();
+        Cache::put($key, $payload, now()->addSeconds($ttlSeconds));
+
+        return response()->json($payload);
     });
 });
 
