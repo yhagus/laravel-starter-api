@@ -10,4 +10,5 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 final class Media extends BaseMedia
 {
     use HasUlids;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 }

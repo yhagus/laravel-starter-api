@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 trait HasQueryPagination
 {
-    public function scopeQueryPagination(
+    protected function scopeQueryPagination(
         Builder $query,
         ?string $search = null,     // Will be overridden if null
         ?int $page = null,          // Will be overridden if null
@@ -17,17 +17,17 @@ trait HasQueryPagination
         array $searchableFields = ['name']
     ): array {
         // Use the provided parameter, or fall back to the request query string
-        $search = $search ?? request()->query('search');
-        $page = $page ?? (int) request()->query('page'); // Cast to int for simplePaginate if exists
-        $perPage = $perPage ?? (int) request()->query('per_page', 25); // Default to 25 if not in request
+        $search ??= request()->query('search');
+        $page ??= (int) request()->query('page'); // Cast to int for simplePaginate if exists
+        $perPage ??= (int) request()->query('per_page', 25); // Default to 25 if not in request
 
         // Apply search query if provided
         if ($search) {
             // Convert the search term to lowercase once
             $lowerCaseSearch = mb_strtolower($search);
 
-            $query->where(function (Builder $q) use ($lowerCaseSearch, $searchableFields) {
-                if (empty($searchableFields)) {
+            $query->where(function (Builder $q) use ($lowerCaseSearch, $searchableFields): void {
+                if ($searchableFields === []) {
                     return;
                 }
 
