@@ -7,6 +7,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
+use Database\Factories\ScheduleFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 final class Schedule extends Model
 {
+    /**
+     * @use HasFactory<ScheduleFactory>
+     */
     use HasFactory;
 
     protected $fillable = [
