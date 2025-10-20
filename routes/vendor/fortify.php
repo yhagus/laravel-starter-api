@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Fortify\AuthenticatedSessionController;
 use App\Http\Controllers\Fortify\ConfirmablePasswordController;
 use App\Http\Controllers\Fortify\ConfirmedPasswordStatusController;
 use App\Http\Controllers\Fortify\ConfirmedTwoFactorAuthenticationController;
@@ -12,7 +11,6 @@ use App\Http\Controllers\Fortify\PasswordController;
 use App\Http\Controllers\Fortify\PasswordResetLinkController;
 use App\Http\Controllers\Fortify\ProfileInformationController;
 use App\Http\Controllers\Fortify\RecoveryCodeController;
-use App\Http\Controllers\Fortify\RegisteredUserController;
 use App\Http\Controllers\Fortify\TwoFactorAuthenticatedSessionController;
 use App\Http\Controllers\Fortify\TwoFactorAuthenticationController;
 use App\Http\Controllers\Fortify\TwoFactorQrCodeController;
@@ -23,9 +21,7 @@ use Illuminate\Support\Facades\Route;
 /** @var array<int, string> $middleware */
 $middleware = config('fortify.middleware');
 
-Route::middleware($middleware)->prefix('auth')->group(function (): void {
-    /** @var string|null $limiter */
-    $limiter = config('fortify.limiters.login');
+Route::middleware($middleware)->prefix('fortify')->group(function (): void {
     /** @var string|null $twoFactorLimiter */
     $twoFactorLimiter = config('fortify.limiters.two-factor');
     /** @var string $verificationLimiter */
@@ -38,24 +34,9 @@ Route::middleware($middleware)->prefix('auth')->group(function (): void {
     $guestGuard = 'guest:'.$guard;
     $authGuard = $authMiddleware.':'.$guard;
 
-    Route::post('/login/{provider}', [AuthenticatedSessionController::class, 'provider'])
-        ->middleware(array_filter([
-            $guestGuard,
-            $limiter !== null ? 'throttle:'.$limiter : null,
-        ]))->name('login.provider');
-
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-        ->middleware(array_filter([
-            $guestGuard,
-            $limiter !== null ? 'throttle:'.$limiter : null,
-        ]))->name('login.store');
-
     Route::middleware([$guestGuard])->group(function (): void {
-        // Password Reset...
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
         Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-        // Registration...
-        Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
     });
 
     // Email Verification...
@@ -68,7 +49,6 @@ Route::middleware($middleware)->prefix('auth')->group(function (): void {
         ->name('verification.send');
 
     Route::middleware([$authGuard])->group(function (): void {
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         Route::as('user-profile-information.')->group(function (): void {
             Route::get('/user/profile-information', [ProfileInformationController::class, 'show'])->name('show');
             Route::put('/user/profile-information', [ProfileInformationController::class, 'update'])->name('update');
