@@ -5,23 +5,20 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Models\Schedule;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * Trait HasSchedules
  * Use this trait in any Eloquent Model to add polymorphic schedule functionality.
  *
- * @method morphMany(string $related, string $name, string $type = null, string $id = null, string $localKey = null)
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasSchedules
 {
     /**
      * Get all schedules for the model.
      *
-     * @return MorphMany<Schedule>
-     *
-     * @mixin Builder<Schedule>
+     * @return MorphMany<Schedule, $this>
      */
     public function schedules(): MorphMany
     {
@@ -30,14 +27,20 @@ trait HasSchedules
 
     /**
      * Create a new schedule for this model.
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function addSchedule(array $attributes): Schedule
     {
+        // The return type of create() is inferred as Schedule
+        // because schedules() returns MorphMany<Schedule>.
         return $this->schedules()->create($attributes);
     }
 
     /**
      * Create a daily schedule.
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function scheduleDailyAt(string $time, array $attributes = []): Schedule
     {
@@ -50,6 +53,9 @@ trait HasSchedules
 
     /**
      * Create a weekly schedule.
+     *
+     * @param  list<int>  $days  Array of integers representing days of the week (e.g., 0-6).
+     * @param  array<string, mixed>  $attributes
      */
     public function scheduleWeeklyOn(array $days, string $time, array $attributes = []): Schedule
     {
@@ -63,6 +69,8 @@ trait HasSchedules
 
     /**
      * Create a monthly schedule.
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function scheduleMonthlyOn(int $day, string $time, array $attributes = []): Schedule
     {
@@ -76,6 +84,8 @@ trait HasSchedules
 
     /**
      * Create a custom cron schedule.
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function scheduleWithCron(string $expression, array $attributes = []): Schedule
     {

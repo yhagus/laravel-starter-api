@@ -8,7 +8,7 @@ return [
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name' => env('MEDIA_DISK', 'public'),
+    'disk_name' => (string) env('MEDIA_DISK', 'public'),
 
     /*
      * The maximum file size of an item in bytes.
@@ -20,23 +20,23 @@ return [
      * This queue connection will be used to generate derived and responsive images.
      * Leave empty to use the default queue connection.
      */
-    'queue_connection_name' => env('QUEUE_CONNECTION', 'sync'),
+    'queue_connection_name' => (string) env('QUEUE_CONNECTION', 'sync'),
 
     /*
      * This queue will be used to generate derived and responsive images.
      * Leave empty to use the default queue.
      */
-    'queue_name' => env('MEDIA_QUEUE', ''),
+    'queue_name' => (string) env('MEDIA_QUEUE', ''),
 
     /*
      * By default all conversions will be performed on a queue.
      */
-    'queue_conversions_by_default' => env('QUEUE_CONVERSIONS_BY_DEFAULT', true),
+    'queue_conversions_by_default' => (bool) env('QUEUE_CONVERSIONS_BY_DEFAULT', true),
 
     /*
      * Should database transactions be run after database commits?
      */
-    'queue_conversions_after_database_commit' => env('QUEUE_CONVERSIONS_AFTER_DB_COMMIT', true),
+    'queue_conversions_after_database_commit' => (bool) env('QUEUE_CONVERSIONS_AFTER_DB_COMMIT', true),
 
     /*
      * The fully qualified class name of the media model.
@@ -61,7 +61,7 @@ return [
      *
      * This model is only used in Media Library Pro (https://medialibrary.pro)
      */
-    'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
+    //    'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
 
     /*
      * When enabled, Media Library Pro will only process temporary uploads that were uploaded
@@ -184,15 +184,15 @@ return [
      * The engine that should perform the image conversions.
      * Should be either `gd` or `imagick`.
      */
-    'image_driver' => env('IMAGE_DRIVER', 'gd'),
+    'image_driver' => (string) env('IMAGE_DRIVER', 'gd'),
 
     /*
      * FFMPEG & FFProbe binaries paths, only used if you try to generate video
      * thumbnails and have installed the php-ffmpeg/php-ffmpeg composer
      * dependency.
      */
-    'ffmpeg_path' => env('FFMPEG_PATH', '/usr/bin/ffmpeg'),
-    'ffprobe_path' => env('FFPROBE_PATH', '/usr/bin/ffprobe'),
+    'ffmpeg_path' => (string) env('FFMPEG_PATH', '/usr/bin/ffmpeg'),
+    'ffprobe_path' => (string) env('FFPROBE_PATH', '/usr/bin/ffprobe'),
 
     /*
      * Here you can override the class names of the jobs used by this package. Make sure
@@ -215,13 +215,13 @@ return [
      * This is option disables SSL verification when downloading remote media.
      * Please note that this is a security risk and should only be false in a local environment.
      */
-    'media_downloader_ssl' => env('MEDIA_DOWNLOADER_SSL', true),
+    'media_downloader_ssl' => (bool) env('MEDIA_DOWNLOADER_SSL', true),
 
     /*
      * The default lifetime in minutes for temporary urls.
      * This is used when you call the `getLastTemporaryUrl` or `getLastTemporaryUrl` method on a media item.
      */
-    'temporary_url_default_lifetime' => env('MEDIA_TEMPORARY_URL_DEFAULT_LIFETIME', 5),
+    'temporary_url_default_lifetime' => (int) env('MEDIA_TEMPORARY_URL_DEFAULT_LIFETIME', 5),
 
     'remote' => [
         /*
@@ -266,7 +266,7 @@ return [
      * the Media Library Pro Vue and React components to move uploaded files
      * in a S3 bucket to their right place.
      */
-    'enable_vapor_uploads' => env('ENABLE_MEDIA_LIBRARY_VAPOR_UPLOADS', false),
+    'enable_vapor_uploads' => (bool) env('ENABLE_MEDIA_LIBRARY_VAPOR_UPLOADS', false),
 
     /*
      * When converting Media instances to response the media library will add
@@ -283,11 +283,11 @@ return [
      * You can specify a prefix for that is used for storing all media.
      * If you set this to `/my-subdir`, all your media will be stored in a `/my-subdir` directory.
      */
-    'prefix' => env('MEDIA_PREFIX', ''),
+    'prefix' => (string) env('MEDIA_PREFIX', ''),
 
     /*
      * When forcing lazy loading, media will be loaded even if you don't eager load media and you have
      * disabled lazy loading globally in the service provider.
      */
-    'force_lazy_loading' => env('FORCE_MEDIA_LIBRARY_LAZY_LOADING', true),
+    'force_lazy_loading' => (bool) env('FORCE_MEDIA_LIBRARY_LAZY_LOADING', true),
 ];

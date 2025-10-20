@@ -39,9 +39,11 @@ Route::middleware([LocalhostAccess::class])->as('passport.')->prefix('passport')
             ->middleware('throttle');
     }
 
-    $guard = config('passport.guard', null);
+    /** @var string|null $guardConfig */
+    $guardConfig = config('passport.guard');
+    $guard = $guardConfig ?? null;
 
-    Route::middleware(['web', $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
+    Route::middleware(['web', $guard !== null ? 'auth:'.$guard : 'auth'])->group(function (): void {
         Route::post('/token/refresh', [TransientTokenController::class, 'refresh'])
             ->name('token.refresh');
 

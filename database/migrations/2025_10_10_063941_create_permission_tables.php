@@ -13,14 +13,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /** @var bool $teams */
         $teams = config('permission.teams');
+        /** @var array<string, string> $tableNames */
         $tableNames = config('permission.table_names');
+        /** @var array<string, string> $columnNames */
         $columnNames = config('permission.column_names');
+        /** @var string $pivotRole */
         $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
+        /** @var string $pivotPermission */
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
-        throw_if(empty($tableNames), new Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.'));
-        throw_if($teams && empty($columnNames['team_foreign_key'] ?? null), new Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.'));
+        if (empty($tableNames)) {
+            throw new Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
+        }
+
+        if ($teams && empty($columnNames['team_foreign_key'] ?? null)) {
+            throw new Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
+        }
 
         Schema::create($tableNames['permissions'], static function (Blueprint $table): void {
             // $table->engine('InnoDB');
@@ -35,14 +45,16 @@ return new class extends Migration
         Schema::create($tableNames['roles'], static function (Blueprint $table) use ($teams, $columnNames): void {
             // $table->engine('InnoDB');
             $table->bigIncrements('id'); // role id
-            if ($teams || config('permission.testing')) { // permission.testing is a fix for sqlite testing
+            /** @var bool $testing */
+            $testing = config('permission.testing');
+            if ($teams || $testing) { // permission.testing is a fix for sqlite testing
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
             }
             $table->string('name');       // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
             $table->string('guard_name'); // For MyISAM use string('guard_name', 25);
             $table->timestamps();
-            if ($teams || config('permission.testing')) {
+            if ($teams || $testing) {
                 $table->unique([$columnNames['team_foreign_key'], 'name', 'guard_name']);
             } else {
                 $table->unique(['name', 'guard_name']);
@@ -113,9 +125,14 @@ return new class extends Migration
             $table->primary([$pivotPermission, $pivotRole], 'role_has_permissions_permission_id_role_id_primary');
         });
 
+        /** @var string|null $cacheStore */
+        $cacheStore = config('permission.cache.store');
+        /** @var string $cacheKey */
+        $cacheKey = config('permission.cache.key');
+
         app(Illuminate\Contracts\Cache\Factory::class)
-            ->store(config('permission.cache.store') !== 'default' ? config('permission.cache.store') : null)
-            ->forget(config('permission.cache.key'));
+            ->store($cacheStore !== 'default' ? $cacheStore : null)
+            ->forget($cacheKey);
     }
 
     /**
@@ -123,9 +140,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        /** @var array<string, string> $tableNames */
         $tableNames = config('permission.table_names');
 
-        throw_if(empty($tableNames), new Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.'));
+        if (empty($tableNames)) {
+            throw new Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
+        }
 
         Schema::drop($tableNames['role_has_permissions']);
         Schema::drop($tableNames['model_has_roles']);

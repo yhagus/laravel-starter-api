@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\CarbonInterface;
+use App\Traits\HasQueryPagination;
+use App\Traits\HasSchedules;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -14,26 +15,25 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 
-/**
- * @property-read int $id
- * @property-read string $first_name
- * @property-read string $last_name
- * @property-read string $email
- * @property-read CarbonInterface|null $email_verified_at
- * @property-read string $password
- * @property-read string|null $remember_token
- * @property-read CarbonInterface $created_at
- * @property-read CarbonInterface $updated_at
- */
 final class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasUlids, Notifiable;
+    /**
+     * @use HasFactory<UserFactory>
+     * @use HasQueryPagination<User>
+     */
+
+    use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable;
 
     protected $fillable = [
         'first_name',
+        'last_name',
         'email',
+        'username',
+        'email_verified_at',
         'password',
+        'is_active',
+        'remember_token',
+        'google_id',
     ];
 
     /**
