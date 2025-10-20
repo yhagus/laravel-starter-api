@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Scout\Searchable;
 
 final class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
 {
@@ -21,8 +22,7 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
      * @use HasFactory<UserFactory>
      * @use HasQueryPagination<User>
      */
-
-    use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable;
+    use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable, Searchable;
 
     protected $fillable = [
         'first_name',

@@ -33,7 +33,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('attempts')->default(0);
             $table->timestamps();
 
-            $table->index(['schedulable_type', 'schedulable_id']);
             $table->index('next_run_at');
             $table->index(['is_active', 'is_paused']);
         });

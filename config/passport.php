@@ -38,10 +38,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | By default, Passport's models will utilize your application's default
-    | database connection. If you wish to use a different connection you
+    | database connection. If you wish to use a different connection, you
     | may specify the configured name of the database connection here.
     |
     */
 
     'connection' => env('PASSPORT_CONNECTION'),
+
+    'base_url' => env('PASSPORT_OAUTH_BASE_URL'),
+    'password_client_id' => env('PASSPORT_PASSWORD_CLIENT_ID'),
+    'password_client_secret' => env('PASSPORT_PASSWORD_CLIENT_SECRET'),
 ];

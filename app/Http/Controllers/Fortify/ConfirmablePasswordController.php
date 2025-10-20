@@ -6,9 +6,10 @@ namespace App\Http\Controllers\Fortify;
 
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
+use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController as FortifyConfirmablePasswordController;
 
 #[Group('Authentication')]
-final class ConfirmablePasswordController extends \Laravel\Fortify\Http\Controllers\ConfirmablePasswordController
+final class ConfirmablePasswordController extends FortifyConfirmablePasswordController
 {
     /**
      * Password confirmation

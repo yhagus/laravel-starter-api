@@ -31,9 +31,7 @@ final class AppServiceProvider extends ServiceProvider
                  * @var SecurityScheme $securityScheme.
                  */
                 $securityScheme = SecurityScheme::http('bearer');
-                $openApi->secure(
-                    securityScheme: $securityScheme
-                );
+                $openApi->secure($securityScheme);
             });
     }
 }

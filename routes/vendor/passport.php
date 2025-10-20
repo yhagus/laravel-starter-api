@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\LocalhostAccess;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
@@ -20,7 +19,7 @@ use Laravel\Passport\Http\Controllers\ScopeController;
 use Laravel\Passport\Http\Controllers\TransientTokenController;
 use Laravel\Passport\Passport;
 
-Route::middleware([LocalhostAccess::class])->as('passport.')->prefix('passport')->group(function (): void {
+Route::as('passport.')->prefix('passport')->group(function (): void {
     Route::post('/token', [AccessTokenController::class, 'issueToken'])
         ->name('token')
         ->middleware('throttle');

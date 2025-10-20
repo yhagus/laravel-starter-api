@@ -6,11 +6,8 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.4/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '8000:80'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -32,18 +29,16 @@ services:
             POSTGRES_DB: laravel
             POSTGRES_USER: laravel
             POSTGRES_PASSWORD: laravel
+        networks:
+            - sail
     redis:
         image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - 'sail-redis:/data'
         networks:
             - sail
     typesense:
         image: 'typesense/typesense:27.1'
-        ports:
-            - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
         environment:
             TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
             TYPESENSE_API_KEY: '${TYPESENSE_API_KEY:-xyz}'
@@ -65,6 +60,18 @@ services:
         networks:
             - sail
         command: 'minio server /data --console-address ":8900"'
+    insight:
+        image: redis/redisinsight:2.58.0
+        container_name: nutribase_insight
+        restart: unless-stopped
+        volumes:
+            - sail-insight:/data
+        environment:
+            - RI_APP_PORT=5540
+        networks:
+            - sail
+        ports:
+            - "5541:5540"
 networks:
     sail:
         driver: bridge
@@ -74,4 +81,6 @@ volumes:
     sail-typesense:
         driver: local
     sail-minio:
+        driver: local
+    sail-insight:
         driver: local
