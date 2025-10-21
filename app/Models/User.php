@@ -50,7 +50,7 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
     public function casts(): array
     {
         return [
-            'id' => 'integer',
+            'id' => 'string',
             'name' => 'string',
             'email' => 'string',
             'email_verified_at' => 'datetime',

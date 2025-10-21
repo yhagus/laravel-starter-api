@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('oauth_auth_codes', function (Blueprint $table): void {
             $table->char('id', 80)->primary();
-            $table->foreignId('user_id')->index();
+            $table->foreignUlid('user_id')->nullable()->index();
             $table->foreignUuid('client_id');
             $table->text('scopes')->nullable();
             $table->boolean('revoked');
