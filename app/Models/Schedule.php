@@ -77,7 +77,7 @@ final class Schedule extends Model
      */
     public function calculateNextRun(): Carbon|CarbonInterface|null
     {
-        $base = Carbon::parse($this->last_run_at ?? now());
+        $base = \Illuminate\Support\Facades\Date::parse($this->last_run_at ?? now());
 
         return match ($this->frequency) {
             'minutely' => $base->copy()->addMinutes($this->interval),

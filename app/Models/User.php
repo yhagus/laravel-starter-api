@@ -24,6 +24,9 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
      */
     use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable, Searchable;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -42,6 +45,12 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
+        'is_active',
+        'google_id',
+        'email_verified_at',
     ];
 
     /**
@@ -50,7 +59,6 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
     public function casts(): array
     {
         return [
-            'id' => 'string',
             'name' => 'string',
             'email' => 'string',
             'email_verified_at' => 'datetime',

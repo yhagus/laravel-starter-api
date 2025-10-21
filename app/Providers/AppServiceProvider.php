@@ -26,7 +26,7 @@ final class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(CarbonInterval::days(1));
 
         Scramble::configure()
-            ->withDocumentTransformers(function (OpenApi $openApi) {
+            ->withDocumentTransformers(function (OpenApi $openApi): void {
                 /**
                  * @var SecurityScheme $securityScheme.
                  */

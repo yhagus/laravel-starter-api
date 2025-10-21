@@ -17,6 +17,7 @@ enum ScheduleFrequency: string
 
     /**
      * Get all frequency values as an array.
+     *
      * @return array<string>
      */
     public static function values(): array

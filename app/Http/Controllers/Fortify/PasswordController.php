@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Fortify;
 
-use App\Http\Requests\Auth\UpdatePasswordRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Contracts\Auth\PasswordBroker;
@@ -29,6 +29,7 @@ final class PasswordController extends Controller
         $updater->update($user, $request->validated());
         $this->broker()->deleteToken($user);
         event(new PasswordUpdatedViaController($user));
+
         return response()->json([
             'message' => 'Password updated.',
         ]);
@@ -37,7 +38,7 @@ final class PasswordController extends Controller
     /**
      * Get the broker to be used to delete any existing password reset tokens.
      */
-    protected function broker(): PasswordBroker
+    private function broker(): PasswordBroker
     {
         $brokerConfig = config('fortify.passwords');
         $brokerName = is_string($brokerConfig) ? $brokerConfig : null;

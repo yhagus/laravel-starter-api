@@ -1,86 +1,93 @@
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.4
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.4/app
-        ports:
-            - '8000:80'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - redis
-            - typesense
-            - minio
-    psql:
-        image: 'postgres:17'
-        environment:
-            PGPASSWORD: laravel
-            POSTGRES_DB: laravel
-            POSTGRES_USER: laravel
-            POSTGRES_PASSWORD: laravel
-        networks:
-            - sail
-    redis:
-        image: 'redis:alpine'
-        volumes:
-            - 'sail-redis:/data'
-        networks:
-            - sail
-    typesense:
-        image: 'typesense/typesense:27.1'
-        environment:
-            TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
-            TYPESENSE_API_KEY: '${TYPESENSE_API_KEY:-xyz}'
-            TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
-        volumes:
-            - 'sail-typesense:/typesense-data'
-        networks:
-            - sail
-    minio:
-        image: 'minio/minio:latest'
-        ports:
-            - '${FORWARD_MINIO_PORT:-9000}:9000'
-            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
-        environment:
-            MINIO_ROOT_USER: sail
-            MINIO_ROOT_PASSWORD: password
-        volumes:
-            - 'sail-minio:/data'
-        networks:
-            - sail
-        command: 'minio server /data --console-address ":8900"'
-    insight:
-        image: redis/redisinsight:2.58.0
-        container_name: nutribase_insight
-        restart: unless-stopped
-        volumes:
-            - sail-insight:/data
-        environment:
-            - RI_APP_PORT=5540
-        networks:
-            - sail
-        ports:
-            - "5541:5540"
+  laravel.test:
+    container_name: laravel.test
+    build:
+      context: ./vendor/laravel/sail/runtimes/8.4
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    image: sail-8.4/app
+    ports:
+      - '8000:80'
+    environment:
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - redis
+      - typesense
+      - minio
+  psql:
+    container_name: psql
+    image: 'postgres:17'
+    environment:
+      PGPASSWORD: laravel
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: laravel
+    ports:
+      - "5222:5432"
+    networks:
+      - sail
+  redis:
+    container_name: redis
+    image: 'redis:alpine'
+    volumes:
+      - 'sail-redis:/data'
+    networks:
+      - sail
+  typesense:
+    container_name: typesense
+    image: 'typesense/typesense:27.1'
+    environment:
+      TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
+      TYPESENSE_API_KEY: '${TYPESENSE_API_KEY:-xyz}'
+      TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
+    volumes:
+      - 'sail-typesense:/typesense-data'
+    networks:
+      - sail
+  minio:
+    container_name: minio
+    image: 'minio/minio:latest'
+    ports:
+      - '${FORWARD_MINIO_PORT:-9000}:9000'
+      - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+    environment:
+      MINIO_ROOT_USER: sail
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - 'sail-minio:/data'
+    networks:
+      - sail
+    command: 'minio server /data --console-address ":8900"'
+  insight:
+    container_name: insight
+    image: redis/redisinsight:2.58.0
+    restart: unless-stopped
+    volumes:
+      - sail-insight:/data
+    environment:
+      - RI_APP_PORT=5540
+    networks:
+      - sail
+    ports:
+      - "5541:5540"
 networks:
-    sail:
-        driver: bridge
+  sail:
+    driver: bridge
 volumes:
-    sail-redis:
-        driver: local
-    sail-typesense:
-        driver: local
-    sail-minio:
-        driver: local
-    sail-insight:
-        driver: local
+  sail-redis:
+    driver: local
+  sail-typesense:
+    driver: local
+  sail-minio:
+    driver: local
+  sail-insight:
+    driver: local

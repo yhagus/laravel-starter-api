@@ -54,7 +54,7 @@ trait HasQueryPagination
         if ($perPage < 1) {
             $perPage = 25;
         }
-        if ($search && ! empty($searchableFields)) {
+        if ($search && $searchableFields !== []) {
             $lowerCaseSearch = mb_strtolower($search);
             $query->where(function (Builder $q) use ($lowerCaseSearch, $searchableFields): void {
                 $fields = $searchableFields; // Work on a copy to avoid side effects.

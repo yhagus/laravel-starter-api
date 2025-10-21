@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -20,37 +20,17 @@ final class AuthenticatedSessionController extends Controller
      */
     public function authorize(Request $request): JsonResponse
     {
-        $authenticatedUser = $request->user();
+        $authenticatedUser = Auth::user();
+        /** @var ?string $authenticatedUserId */
+        $authenticatedUserId = $authenticatedUser?->id;
 
-        return response()->json($authenticatedUser);
+        $cachedUser = Cache::remember(
+            'auth.'.$authenticatedUserId,
+            ttl: 3600, // Cache for 1 hour (in seconds)
+            callback: fn () => $authenticatedUser
+        );
 
-        if ($authenticatedUser === null) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
-
-        /** @var User $user */
-        $user = $authenticatedUser->select(['id', 'email'])->first();
-
-        if (! $user->exists()) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        /** @var string $userId */
-        $userId = $user->getAuthIdentifier();
-        $key = sprintf('auth:user:%s', $userId);
-        $ttlSeconds = 60;
-
-        /** @var array<string, mixed>|null $cached */
-        $cached = Cache::get($key);
-
-        if ($cached !== null) {
-            return response()->json($cached);
-        }
-
-        $payload = $user->toArray();
-        Cache::put($key, $payload, now()->addSeconds($ttlSeconds));
-
-        return response()->json($payload);
+        return response()->json($cachedUser);
     }
 
     /**
