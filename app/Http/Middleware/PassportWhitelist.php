@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class LocalhostAccess
+final class PassportWhitelist
 {
     /**
      * Handle an incoming request.
@@ -17,11 +17,12 @@ final class LocalhostAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //        $allowedIps = ['127.0.0.1', '::1'];
-        //
-        //        if (! in_array($request->ip(), $allowedIps)) {
-        //            abort(404);
-        //        }
+        $whitelist = config('passport.whitelist');
+
+        if ($whitelist !== null) {
+            $allowedIps = explode(',', $whitelist);
+            abort_unless(in_array($request->ip(), $allowedIps), 404);
+        }
 
         return $next($request);
     }

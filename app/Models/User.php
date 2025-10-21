@@ -25,6 +25,7 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
     use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable, Searchable;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

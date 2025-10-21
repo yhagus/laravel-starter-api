@@ -48,4 +48,6 @@ return [
     'base_url' => env('PASSPORT_OAUTH_BASE_URL'),
     'password_client_id' => env('PASSPORT_PASSWORD_CLIENT_ID'),
     'password_client_secret' => env('PASSPORT_PASSWORD_CLIENT_SECRET'),
+
+    'whitelist' => env('PASSPORT_WHITELIST'),
 ];
