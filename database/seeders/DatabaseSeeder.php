@@ -12,7 +12,9 @@ final class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::query()->create([
+        User::query()->firstOrCreate([
+            'email' => 'admin@admin.com',
+        ], [
             'first_name' => 'Admin',
             'email' => 'admin@admin.com',
             'password' => 'admin123',

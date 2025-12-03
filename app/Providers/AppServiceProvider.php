@@ -9,7 +9,9 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
+use Illuminate\Routing\Route;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,9 @@ final class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(CarbonInterval::days(1));
 
         Scramble::configure()
+            ->routes(function (Route $route) {
+                return Str::startsWith($route->uri, 'v1/');
+            })
             ->withDocumentTransformers(function (OpenApi $openApi): void {
                 /**
                  * @var SecurityScheme $securityScheme.

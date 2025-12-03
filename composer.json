@@ -11,7 +11,6 @@
     "require": {
         "php": "^8.4",
         "dedoc/scramble": "0.13.6",
-        "laravel/fortify": "1.32.1",
         "laravel/framework": "12.41.0",
         "laravel/octane": "2.13.2",
         "laravel/passport": "13.4.1",

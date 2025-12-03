@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('auth')->group(function (): void {
+Route::prefix('auth')->group(function () {
     Route::middleware(['auth:api'])->group(function (): void {
         Route::get('/authorize', [AuthenticatedSessionController::class, 'authorize']);
         Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);

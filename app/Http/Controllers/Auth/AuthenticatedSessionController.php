@@ -10,6 +10,7 @@ use App\Traits\HandlesUserSessionCache;
 use Dedoc\Scramble\Attributes\Group;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response as HttpResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -131,6 +132,7 @@ final class AuthenticatedSessionController extends Controller
         $url = $baseUrl.'/vendor/passport/token';
 
         try {
+            /** @var HttpResponse $response */
             $response = Http::asForm()->post($url, [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $refreshToken,
