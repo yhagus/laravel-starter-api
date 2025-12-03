@@ -9,6 +9,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 final class HttpResource extends JsonResource
 {
+    public static $wrap;
+
     /**
      * Create a new resource instance.
      */

@@ -6,7 +6,6 @@ namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 
 trait HandlesUserSessionCache
@@ -62,7 +61,7 @@ trait HandlesUserSessionCache
 
     protected function respondWithUserSessionPayload(array $payload, string $identifier): JsonResponse
     {
-        return Response::json($payload)
+        return response()->json($payload)
             ->withCookie($this->buildUserIdentifierCookie($identifier));
     }
 

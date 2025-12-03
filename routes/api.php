@@ -10,4 +10,8 @@ Route::as('vendor.')->prefix('vendor')->group(function (): void {
 
 Route::prefix('v1')->group(function (): void {
     require __DIR__.'/src/auth.php';
+    require __DIR__.'/src/password.php';
+    require __DIR__.'/src/profile.php';
+    require __DIR__.'/src/role.php';
+    require __DIR__.'/src/user.php';
 });

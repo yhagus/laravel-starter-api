@@ -7,7 +7,10 @@ namespace App\Http\Requests\Common;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class PaginationRequest extends FormRequest
+/**
+ * @Inheritable
+ */
+class PaginationRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

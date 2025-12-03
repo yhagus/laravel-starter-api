@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Traits\HasQueryPagination;
 use App\Traits\HasSchedules;
+use App\Traits\Sortable;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -22,7 +23,7 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
      * @use HasFactory<UserFactory>
      * @use HasQueryPagination<User>
      */
-    use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable, Searchable;
+    use HasApiTokens, HasFactory, HasQueryPagination, HasSchedules, HasUlids, Notifiable, Searchable, Sortable;
 
     public $incrementing = false;
 
@@ -63,7 +64,6 @@ final class User extends Authenticatable implements MustVerifyEmail, OAuthentica
             'name' => 'string',
             'email' => 'string',
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'remember_token' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

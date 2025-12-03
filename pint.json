@@ -11,8 +11,20 @@
         "declare_strict_types": true,
         "lowercase_keywords": true,
         "lowercase_static_reference": true,
-        "final_class": true,
-        "final_internal_class": true,
+        "final_internal_class": {
+            "include": [],
+            "exclude": [
+                "final",
+                "entity",
+                "orm\\entity",
+                "orm\\mapping\\entity",
+                "mapping\\entity",
+                "document",
+                "odm\\document",
+                "inheritable"
+            ],
+            "consider_absent_docblock_as_internal_class": true
+        },
         "final_public_method_for_abstract_class": true,
         "fully_qualified_strict_types": true,
         "global_namespace_import": {
@@ -20,7 +32,7 @@
             "import_constants": true,
             "import_functions": true
         },
-        "mb_str_functions": true,
+        "mb_str_functions": false,
         "modernize_types_casting": true,
         "new_with_parentheses": false,
         "no_superfluous_elseif": true,

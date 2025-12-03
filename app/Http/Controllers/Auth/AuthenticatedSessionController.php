@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
 use Laravel\Passport\AccessToken;
 
 #[Group('Authentication')]
@@ -91,7 +90,7 @@ final class AuthenticatedSessionController extends Controller
 
         Cookie::queue(Cookie::forget($this->userIdentifierCookieName()));
 
-        return Response::json([
+        return response()->json([
             'message' => 'Logout success',
         ]);
     }
@@ -172,7 +171,7 @@ final class AuthenticatedSessionController extends Controller
      */
     private function respondWithAuthorizedUser(array|User $userPayload, string $email): JsonResponse
     {
-        return Response::json($userPayload)
+        return response()->json($userPayload)
             ->withCookie($this->buildUserIdentifierCookie($email));
     }
 }

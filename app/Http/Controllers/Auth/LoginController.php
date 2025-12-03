@@ -16,7 +16,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
 
 #[Group('Authentication')]
 final class LoginController extends Controller
@@ -61,7 +60,7 @@ final class LoginController extends Controller
             abort(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $exceptionMessage);
         }
         if ($response->failed()) {
-            return Response::json($response->body(), $response->status());
+            return response()->json($response->body(), $response->status());
         }
         /** @var array{token_type: string, expires_in: int, access_token: string, refresh_token: string}|null $jsonResponse */
         $jsonResponse = $response->json();
