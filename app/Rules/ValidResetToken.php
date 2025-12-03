@@ -9,9 +9,9 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Password;
 
-final class ValidResetToken implements ValidationRule
+final readonly class ValidResetToken implements ValidationRule
 {
-    public function __construct(private readonly string $email) {}
+    public function __construct(private string $email) {}
 
     /**
      * Run the validation rule.

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
-use App\Rules\ValidResetToken;
 use App\Models\User;
+use App\Rules\ValidResetToken;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
