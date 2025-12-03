@@ -18,8 +18,12 @@ final class PaginationRequest extends FormRequest
     {
         return [
             'search' => ['string', 'nullable'],
+            /** @example 1 */
+            /** @default 1 */
             'page' => ['numeric', 'min:1', 'nullable'],
-            'per_page' => ['numeric', 'nullable', 'max:100'],
+            /** @example 50 */
+            /** @default 50 */
+            'per_page' => ['numeric', 'nullable', 'min:1', 'max:100'],
         ];
     }
 }

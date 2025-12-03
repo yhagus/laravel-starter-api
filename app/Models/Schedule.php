@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ScheduleAction;
+use App\Enums\ScheduleFrequency;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -40,6 +42,10 @@ final class Schedule extends Model
         'metadata',
         'max_attempts',
         'attempts',
+        'action',
+        'schedulable_id',
+        'schedulable_type',
+        'scheduled_by',
     ];
 
     /**
@@ -165,6 +171,8 @@ final class Schedule extends Model
             'is_active' => 'boolean',
             'is_paused' => 'boolean',
             'metadata' => 'array',
+            'action' => ScheduleAction::class,
+            'frequency' => ScheduleFrequency::class,
         ];
     }
 
